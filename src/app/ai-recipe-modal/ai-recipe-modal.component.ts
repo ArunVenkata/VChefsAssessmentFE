@@ -58,7 +58,7 @@ export class AiRecipeModalComponent extends BaseComponent implements OnInit {
   }
   generateRecipe(): void {
     if (!this.recipeName) {
-      this.nzNotificationService.error('Please enter a recipe name',"");
+      this.nzNotificationService.warning('Please enter a recipe name',"");
       return;
     }
     this.loading = true;

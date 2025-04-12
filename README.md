@@ -1,27 +1,128 @@
 # CurryupaiFe
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.4.
+CurryupaiFe is an Angular application built using Angular CLI v18.2.4. This project integrates Google OAuth for authentication, leverages Tailwind CSS with SCSS for styling, and uses ng-zorro-antd for UI components and icons
 
-## Development server
+## Table of Contents
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- [Overview](#overview)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Authentication](#authentication)
+- [Styling](#styling)
+- [HTTP Interceptor](#http-interceptor)
+- [Development](#development)
+- [Build & Production](#build--production)
+- [Testing](#testing)
+- [Further Help](#further-help)
 
-## Code scaffolding
+## Overview
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+CurryupaiFe is a modern single-page application (SPA) that:
+- Uses Angular's standalone components and routing with authentication guarding.
+- Integrates Google Sign-In to authenticate users and leverages HTTP-only cookies that are set by the backend.
+- Uses Tailwind CSS in conjunction with SCSS for fast and responsive styling.
+- Selectively imports only the required ng-zorro icons, optimizing bundle size in production.
 
-## Build
+## Tech Stack
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+- **Angular 18.2.0** – Framework for building the SPA.
+- **TypeScript** – Strongly-typed language enabling safer JavaScript code.
+- **Angular CLI** – For project scaffolding, building, and serving the app.
+- **Tailwind CSS** – Utility-first CSS framework integrated via PostCSS.
+- **SCSS & Less** – Styling languages used in the project.
+- **ng-zorro-antd** – Angular UI component library with rich icon support.
+- **Google OAuth** – For secure third-party user authentication.
+- **HTTP-only Cookies** – For secure storage of authentication information.
 
-## Running unit tests
+## Project Structure
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+The key files and directories include:
 
-## Running end-to-end tests
+- **src/**
+  - **app/**
+    - `app.component.ts` – Root component that sets up the `<router-outlet>`.
+    - `app.routes.ts` – Angular route definitions. Routes to `/` are protected with an `AuthGuard`.
+    - `auth.interceptor.ts` – HTTP interceptor that attaches the bearer token for authenticated requests.
+    - Other application-specific components (e.g., login, home) and services.
+  - **environments/** – Environment-specific configuration files, using file replacements specified in `angular.json`.
+  - `main.ts` – Bootstraps the Angular application, provides global services including the icons and HTTP interceptors.
+  - `styles.scss` & `theme.less` – Global styling resources. Tailwind CSS is integrated through PostCSS.
+- **public/** – Static assets used by the application.
+- **angular.json** – Angular CLI configuration (assets, styles, scripts, environment settings).
+- **package.json** – Contains project dependencies and scripts.
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+For a detailed view of the project structure, please refer to the repository tree.
 
-## Further help
+## Authentication
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+The application uses Google OAuth for authentication. Here’s how it works:
+
+1. **Login Process:**  
+   The [LoginComponent](src/app/login/login.component.ts) initializes the Google Sign-In button using the Google API. Upon successful sign in, it calls a backend API (`/auth/google`) with the Google token.
+
+2. **Backend Integration:**  
+   The backend verifies the token using `google-auth-library`, creates (or updates) the user record in the database, and responds with a JSON indicating success. An HTTP-only cookie is set (named `auth`) to securely maintain the login session.
+
+3. **Route Protection:**  
+   The [AuthGuard](src/app/guards/auth.guard.ts) calls [`AuthService.getGoogleLoginDetails`](src/app/services/auth.service.ts) to ensure that the cookie exists and is valid. If not, it redirects the user to `/login`.
+
+## Styling
+
+- **Tailwind CSS with SCSS:**  
+  Tailwind CSS is integrated into the SCSS workflow via PostCSS. Global styles are located in [`src/styles.scss`](src/styles.scss).  
+- **Less for Theme Styling:**  
+  Additional theme styles are located in [`src/theme.less`](src/theme.less).
+
+## HTTP Interceptor
+
+The interceptor ([auth.interceptor.ts](src/auth.interceptor.ts)) injects an access token (if available) into every outgoing HTTP request. This ensures that protected endpoints receive the necessary authorization header. HTTP requests are executed using Angular’s HttpClient and are registered in the bootstrap process in [`main.ts`](src/main.ts).
+
+## Development
+
+To run the development server:
+
+```bash
+ng serve --configuration development
+```
+
+- The default configuration uses the settings specified in `angular.json`, including assets and stylesheets.
+- The development build uses local environments (see `/src/environments/environment.ts`).
+
+## Build & Production
+
+To build the project for production:
+
+```bash
+ng build --configuration production
+```
+
+- The production configuration uses file replacements defined in [`angular.json`](angular.json) to switch from `environment.ts` to `environment.production.ts`.
+- Only the necessary ng-zorro icons are included in the production bundle by selectively providing them in [`main.ts`](src/main.ts).
+- PostCSS is used with Tailwind CSS directives and Autoprefixer to optimize and bundle the CSS.
+
+## Testing
+
+- **Unit Tests:**  
+  Run unit tests using Karma. Execute the unit tests with:
+
+  ```bash
+  ng test
+  ```
+
+- **End-to-End Tests:**  
+  For e2e testing, use the built-in Angular e2e testing support (or additional packages as required).
+
+## Further Help
+
+For more help with Angular CLI:
+
+- [Angular CLI Documentation](https://angular.io/cli)
+- [Angular Documentation](https://angular.io/docs)
+- [ng-zorro-antd Icon Documentation](https://ng.ant.design/components/icon/en)
+- For Tailwind CSS integration, see [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+Happy Coding!

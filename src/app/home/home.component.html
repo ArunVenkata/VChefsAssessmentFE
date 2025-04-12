@@ -44,7 +44,7 @@
         class="relative transition-transform transform hover:-translate-y-1 hover:shadow-lg cursor-pointer"
         [nzExtra]="extraTemplate">
 
-        <nz-card-meta nzDescription="{{ recipe.description || 'No description...'}}"></nz-card-meta>
+        <nz-card-meta nzDescription="{{ recipe.description || 'Sample description...'}}"></nz-card-meta>
         <ng-template #extraTemplate>
           <button nz-button nzType="default" class="absolute top-1 right-1 text-xs"
             (click)="$event.stopPropagation(); removeRecipe(recipe)">
