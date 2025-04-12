@@ -1,0 +1,63 @@
+<div class="h-full w-full pt-24">
+
+  <div class="mx-auto p-10 max-w-3xl bg-gray-50 rounded-lg shadow">
+
+    <div class="flex justify-between">
+      <div class="flex flex-col">
+        <h2 class="mb-6 font-[Pacifico] text-2xl">Recipe Search 
+        <button nz-tooltip nzTooltipTitle="Logout" nz-button nzType="default"(click)="onLogout()"><span nz-icon nzType="logout" nzTheme="outline"></span></button>
+
+        </h2>
+        <p>Search and add a recipe to continue</p>
+      </div>
+      <div>
+        <button nz-button nzType="primary" class="flex items-center" (click)="openAIModal()">
+          <span nz-icon nzType="plus" nzTheme="outline"></span> Add Recipe using AI
+        </button>
+      </div>
+
+    </div>
+
+    <div class="flex items-center justify-between">
+      <nz-input-group *ngIf="selectedRecipes.length>=4" nz-tooltip [nzTooltipPlacement]="['topLeft', 'leftTop']"
+        nzTooltipTitle="You can add only upto 4 recipes" nzSearch class="w-full mb-5">
+        <input type="text" nz-input [disabled]="true" [nzAutocomplete]="auto"
+          class="w-full p-2 border border-gray-300 rounded" />
+      </nz-input-group>
+
+      <nz-input-group *ngIf="selectedRecipes.length<4" nzSearch class="w-full mb-5">
+        <input type="text" nz-input [(ngModel)]="searchQuery" [disabled]="selectedRecipes.length>=4"
+          (ngModelChange)="onSearchInputChange($event)" (keydown.enter)="triggerSearch($event)" [nzAutocomplete]="auto"
+          class="w-full p-2 border border-gray-300 rounded" />
+      </nz-input-group>
+    </div>
+
+    <nz-autocomplete nzBackfill #auto>
+      <nz-auto-option *ngFor="let item of suggestions;" [nzValue]="item.name" (click)="onSelectSuggestion(item)"
+        class="cursor-pointer hover:bg-gray-200 p-2 rounded">
+        {{ item.name }}
+      </nz-auto-option>
+    </nz-autocomplete>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-5 w-full">
+      <nz-card *ngFor="let recipe of selectedRecipes" [nzTitle]="recipe.name" (click)="showRecipeModal(recipe)"
+        class="relative transition-transform transform hover:-translate-y-1 hover:shadow-lg cursor-pointer"
+        [nzExtra]="extraTemplate">
+
+        <nz-card-meta nzDescription="{{ recipe.description || 'No description...'}}"></nz-card-meta>
+        <ng-template #extraTemplate>
+          <button nz-button nzType="default" class="absolute top-1 right-1 text-xs"
+            (click)="$event.stopPropagation(); removeRecipe(recipe)">
+            <span nz-icon nzType="delete" nzTheme="outline"></span>
+          </button>
+        </ng-template>
+      </nz-card>
+
+    </div>
+
+    <button [disabled]="selectedRecipes.length==0" nz-button nzType="primary" (click)="showGroceryChecklist()" class="mt-8">
+      Show Grocery Checklist
+    </button>
+  </div>
+
+</div>

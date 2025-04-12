@@ -1,1 +1,9 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+@import "tailwindcss"  important;
+@import "tailwindcss/utilities";
+
+html, body{
+    @apply w-full h-full bg-[#6D60E3];
+    margin: 0!important;
+}

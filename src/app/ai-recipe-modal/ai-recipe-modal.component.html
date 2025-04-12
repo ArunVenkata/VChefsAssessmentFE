@@ -1,0 +1,25 @@
+<div>
+  <nz-input-group nzSize="large" nzCompact class="flex gap-4 items-center">
+    <input nz-input placeholder="Enter recipe name" [(ngModel)]="recipeName" />
+    <button nz-button nzType="primary" (click)="generateRecipe()" [nzLoading]="loading">Generate</button>
+  </nz-input-group>
+  
+  <div *ngIf="recipeData">
+    <nz-table #basicTable [nzData]="recipeData.ingredients">
+      <thead>
+        <tr>
+          <th>Ingredient</th>
+          <th>Quantity</th>
+          <th>Unit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let ing of basicTable.data">
+          <td>{{ ing.name }}</td>
+          <td>{{ ing.quantity }}</td>
+          <td>{{ ing.unit }}</td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+</div>
